@@ -393,3 +393,4 @@ Cargo.lock
 *.pdb
 
 # End of https://www.t_optal.com/developers/gitignore/api/node,c++,cmake,python,go,rust
+ACTIVITY.md
