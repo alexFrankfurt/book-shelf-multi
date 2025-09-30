@@ -8,17 +8,17 @@ The project is structured as a monorepo with the following directories:
 
 - `frontend`: Contains the frontend application (a simple HTML file) and its tests (Cypress and Playwright).
 - `backend`: Contains the different backend implementations, each in its own subdirectory:
-  - `c`: A backend built with plain C.
-  - `cpp`: A backend built with C++.
-  - `csharp`: A backend built with ASP.NET Core.
-  - `express`: A backend built with Express.js.
-  - `fastapi`: A backend built with FastAPI (Python).
-  - `fsharp`: A backend built with F# and ASP.NET Core.
-  - `go`: A backend built with Go.
-  - `java`: A backend built with Spring Boot.
-  - `nestjs`: A backend built with NestJS.
-  - `nodejs`: A backend built with plain Node.js.
-  - `rust`: A backend built with Rust.
+  - `c`: A backend built with plain C using **libmicrohttpd** for HTTP requests.
+  - `cpp`: A backend built with C++ using **Crow** for HTTP requests.
+  - `csharp`: A backend built with ASP.NET Core using **ASP.NET Core** for HTTP requests.
+  - `express`: A backend built with Express.js using **Express** for HTTP requests.
+  - `fastapi`: A backend built with FastAPI (Python) using **FastAPI** for HTTP requests.
+  - `fsharp`: A backend built with F# and ASP.NET Core using **ASP.NET Core** for HTTP requests.
+  - `go`: A backend built with Go using **gorilla/mux** for HTTP requests.
+  - `java`: A backend built with Spring Boot using **Spring Web MVC** for HTTP requests.
+  - `nestjs`: A backend built with NestJS using **NestJS** (Express-based) for HTTP requests.
+  - `nodejs`: A backend built with plain Node.js using **Node.js HTTP** module for HTTP requests.
+  - `rust`: A backend built with Rust using **actix-web** for HTTP requests.
 
 ## Installation
 
