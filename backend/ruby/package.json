@@ -1,0 +1,12 @@
+{
+  "name": "ruby-book-api",
+  "version": "1.0.0",
+  "description": "Book API implementation in Ruby with custom HTTP server",
+  "main": "simple_server.rb",
+  "scripts": {
+    "start": "ruby simple_server.rb"
+  },
+  "keywords": ["ruby", "http", "api", "book"],
+  "author": "",
+  "license": "MIT"
+}

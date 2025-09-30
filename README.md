@@ -19,6 +19,7 @@ The project is structured as a monorepo with the following directories:
   - `java`: A backend built with Spring Boot using **Spring Web MVC** for HTTP requests.
   - `nestjs`: A backend built with NestJS using **NestJS** (Express-based) for HTTP requests.
   - `nodejs`: A backend built with plain Node.js using **Node.js HTTP** module for HTTP requests.
+  - `ruby`: A backend built with Ruby using **custom HTTP server** for HTTP requests.
   - `rust`: A backend built with Rust using **actix-web** for HTTP requests.
 
 ## Installation
@@ -151,6 +152,12 @@ You can run any of the backend implementations using the following commands:
 
   ```bash
   npm run start:fsharp
+  ```
+
+- **Ruby:**
+
+  ```bash
+  npm run start:ruby
   ```
 
 All backends run on `http://localhost:3000` by default.
