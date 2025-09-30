@@ -16,6 +16,7 @@
     "start:cpp": "cd backend/cpp/build && ./cpp_backend",
     "start:go": "cd backend/go && go run main.go",
     "start:rust": "cd backend/rust && cargo run",
+    "start:haskell": "cd backend/haskell && stack run",
     "start:java": "npm start --workspace=backend/java",
     "start:csharp": "npm start --workspace=backend/csharp",
     "start:fsharp": "npm start --workspace=backend/fsharp",
@@ -27,6 +28,7 @@
     "build:c": "cd backend/c && make",
     "build:cpp": "cd backend/cpp && mkdir -p build && cd build && cmake .. && cmake --build . --config Release",
     "build:rust": "cd backend/rust && cargo build",
+    "build:haskell": "cd backend/haskell && stack build",
     "test:cypress": "npm test --workspace=frontend",
     "test:playwright": "npx playwright test --config frontend/playwright.config.ts",
     "start:dev": "concurrently \"npm:start:nestjs\" \"npm:start:frontend\""
