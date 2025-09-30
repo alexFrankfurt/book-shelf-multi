@@ -1,0 +1,25 @@
+name: haskell-book-api
+version: 0.1.0.0
+synopsis: Book API in Haskell
+description: A simple book API implementation in Haskell using Scotty
+author: Generated
+maintainer: generated@example.com
+license: BSD3
+build-type: Simple
+executables:
+  haskell-book-api:
+    main: Main.hs
+    dependencies:
+      - base >=4.14 && <5
+      - scotty
+      - aeson
+      - text
+      - uuid
+      - unordered-containers
+      - mtl
+      - stm
+      - wai
+      - wai-extra
+      - http-types
+    source-dirs: src
+    language: Haskell2010

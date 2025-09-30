@@ -1,0 +1,34 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.38.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           haskell-book-api
+version:        0.1.0.0
+synopsis:       Book API in Haskell
+description:    A simple book API implementation in Haskell using Scotty
+author:         Generated
+maintainer:     generated@example.com
+license:        BSD3
+build-type:     Simple
+
+executable haskell-book-api
+  main-is: Main.hs
+  other-modules:
+      Paths_haskell_book_api
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson
+    , base >=4.14 && <5
+    , http-types
+    , mtl
+    , scotty
+    , stm
+    , text
+    , unordered-containers
+    , uuid
+    , wai
+    , wai-extra
+  default-language: Haskell2010

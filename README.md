@@ -15,6 +15,7 @@ The project is structured as a monorepo with the following directories:
   - `fastapi`: A backend built with FastAPI (Python) using **FastAPI** for HTTP requests.
   - `fsharp`: A backend built with F# and ASP.NET Core using **ASP.NET Core** for HTTP requests.
   - `go`: A backend built with Go using **gorilla/mux** for HTTP requests.
+  - `haskell`: A backend built with Haskell using **Scotty** for HTTP requests.
   - `java`: A backend built with Spring Boot using **Spring Web MVC** for HTTP requests.
   - `nestjs`: A backend built with NestJS using **NestJS** (Express-based) for HTTP requests.
   - `nodejs`: A backend built with plain Node.js using **Node.js HTTP** module for HTTP requests.
@@ -56,6 +57,12 @@ Some backends require building before running:
 
   ```bash
   npm run build:rust
+  ```
+
+- **Haskell:**
+
+  ```bash
+  npm run build:haskell
   ```
 
 ## Running the Application
@@ -114,6 +121,12 @@ You can run any of the backend implementations using the following commands:
 
   ```bash
   npm run start:go
+  ```
+
+- **Haskell:**
+
+  ```bash
+  npm run start:haskell
   ```
 
 - **Rust:**
