@@ -8,14 +8,17 @@ The project is structured as a monorepo with the following directories:
 
 - `frontend`: Contains the frontend application (a simple HTML file) and its tests (Cypress and Playwright).
 - `backend`: Contains the different backend implementations, each in its own subdirectory:
-  - `nestjs`: A backend built with NestJS.
+  - `c`: A backend built with plain C.
+  - `cpp`: A backend built with C++.
+  - `csharp`: A backend built with ASP.NET Core.
   - `express`: A backend built with Express.js.
   - `fastapi`: A backend built with FastAPI (Python).
-  - `nodejs`: A backend built with plain Node.js.
-  - `c`: A backend built with plain C.
-  - `java`: A backend built with Spring Boot.
-  - `csharp`: A backend built with ASP.NET Core.
   - `fsharp`: A backend built with F# and ASP.NET Core.
+  - `go`: A backend built with Go.
+  - `java`: A backend built with Spring Boot.
+  - `nestjs`: A backend built with NestJS.
+  - `nodejs`: A backend built with plain Node.js.
+  - `rust`: A backend built with Rust.
 
 ## Installation
 
@@ -32,6 +35,28 @@ The project is structured as a monorepo with the following directories:
    ```
 
    This will install the dependencies for the root project, the frontend, and all the backend projects.
+
+## Building Backends
+
+Some backends require building before running:
+
+- **Plain C:**
+
+  ```bash
+  npm run build:c
+  ```
+
+- **C++:**
+
+  ```bash
+  npm run build:cpp
+  ```
+
+- **Rust:**
+
+  ```bash
+  npm run build:rust
+  ```
 
 ## Running the Application
 
@@ -79,6 +104,24 @@ You can run any of the backend implementations using the following commands:
   npm run start:c
   ```
 
+- **C++:**
+
+  ```bash
+  npm run start:cpp
+  ```
+
+- **Go:**
+
+  ```bash
+  npm run start:go
+  ```
+
+- **Rust:**
+
+  ```bash
+  npm run start:rust
+  ```
+
 - **Java:**
 
   ```bash
@@ -89,6 +132,12 @@ You can run any of the backend implementations using the following commands:
 
   ```bash
   npm run start:csharp
+  ```
+
+- **F#:**
+
+  ```bash
+  npm run start:fsharp
   ```
 
 All backends run on `http://localhost:3000` by default.
