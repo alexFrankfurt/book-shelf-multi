@@ -48,6 +48,23 @@ npm run start:nestjs
 
 The API will be available at http://localhost:3000
 
+## Plain C Implementation
+
+To run the plain C implementation, use the following command from the root of the project:
+
+```bash
+npm run start:c
+```
+
+The API will be available at http://localhost:3000
+
+**Prerequisites:** The C implementation requires the following system libraries:
+- libmicrohttpd (HTTP server library)
+- json-c (JSON parsing library)
+- libuuid (UUID generation library)
+
+See `backend/c/README.md` for detailed installation instructions for your platform.
+
 ## API Data Model
 
 All implementations use the same data model:

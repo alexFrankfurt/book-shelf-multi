@@ -12,16 +12,22 @@
     "start:express": "npm start --workspace=backend/express",
     "start:fastapi": "pip install -r backend/fastapi/requirements.txt && uvicorn backend.fastapi.main:app --reload",
     "start:nodejs": "node backend/nodejs/index.js",
+    "start:c": "cd backend/c && book-api.exe",
+    "start:java": "npm start --workspace=backend/java",
+    "start:csharp": "npm start --workspace=backend/csharp",
     "start:frontend": "npm start --workspace=frontend",
     "install:nestjs": "npm install --workspace=backend/nestjs",
     "install:express": "npm install --workspace=backend/express",
     "install:fastapi": "pip install -r backend/fastapi/requirements.txt",
+    "build:c": "cd backend/c && make",
     "test:cypress": "npm test --workspace=frontend",
     "test:playwright": "npx playwright test --config frontend/playwright.config.ts",
     "start:dev": "concurrently \"npm:start:nestjs\" \"npm:start:frontend\""
   },
   "devDependencies": {
+    "@types/node": "^24.6.0",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "playwright": "^1.45.1"
   }
 }

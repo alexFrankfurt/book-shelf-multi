@@ -1,0 +1,10 @@
+{
+  "name": "book-api-java",
+  "version": "1.0.0",
+  "description": "Book API backend in Java with Spring Boot",
+  "scripts": {
+    "start": "mvn spring-boot:run",
+    "build": "mvn clean compile",
+    "test": "mvn test"
+  }
+}

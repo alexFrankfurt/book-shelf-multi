@@ -12,6 +12,9 @@ The project is structured as a monorepo with the following directories:
   - `express`: A backend built with Express.js.
   - `fastapi`: A backend built with FastAPI (Python).
   - `nodejs`: A backend built with plain Node.js.
+  - `c`: A backend built with plain C.
+  - `java`: A backend built with Spring Boot.
+  - `csharp`: A backend built with ASP.NET Core.
 
 ## Installation
 
@@ -67,6 +70,24 @@ You can run any of the backend implementations using the following commands:
 
   ```bash
   npm run start:nodejs
+  ```
+
+- **Plain C:**
+
+  ```bash
+  npm run start:c
+  ```
+
+- **Java:**
+
+  ```bash
+  npm run start:java
+  ```
+
+- **C#:**
+
+  ```bash
+  npm run start:csharp
   ```
 
 All backends run on `http://localhost:3000` by default.

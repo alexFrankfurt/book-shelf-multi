@@ -1,0 +1,16 @@
+# Compiled Object files
+*.o
+*.obj
+
+# Compiled executables
+book-api
+book-api.exe
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Dependencies
+*.d

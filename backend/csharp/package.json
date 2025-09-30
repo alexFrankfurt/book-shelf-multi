@@ -1,0 +1,10 @@
+{
+  "name": "book-api-csharp",
+  "version": "1.0.0",
+  "description": "Book API backend in C# with ASP.NET Core",
+  "scripts": {
+    "start": "dotnet run",
+    "build": "dotnet build",
+    "test": "dotnet test"
+  }
+}

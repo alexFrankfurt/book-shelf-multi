@@ -1,0 +1,10 @@
+{
+  "name": "book-shelf-c",
+  "version": "1.0.0",
+  "description": "Plain C backend for book shelf application",
+  "scripts": {
+    "start": "cd backend/c && make run",
+    "build": "cd backend/c && make",
+    "clean": "cd backend/c && make clean"
+  }
+}
