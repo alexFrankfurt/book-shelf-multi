@@ -1,0 +1,10 @@
+{
+  "name": "@book-shelf/nodejs-backend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "mongodb": "^6.8.0",
+    "oracledb": "^6.5.1",
+    "uuid": "^9.0.0"
+  }
+}

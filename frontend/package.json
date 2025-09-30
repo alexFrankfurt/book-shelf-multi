@@ -1,0 +1,24 @@
+{
+  "name": "@book-shelf/frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cross-env API_BASE_URL=http://127.0.0.1:8081/book npx serve public",
+    "test": "cypress run"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "@types/node": "^24.5.2",
+    "cross-env": "^7.0.3",
+    "cypress": "^15.3.0",
+    "serve": "^14.2.1"
+  },
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
