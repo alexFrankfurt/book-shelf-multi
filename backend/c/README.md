@@ -30,6 +30,10 @@ brew install libmicrohttpd json-c ossp-uuid
 
 #### Windows (using MSYS2):
 ```bash
+# First, update MSYS2 itself
+pacman -Syu
+
+# Then install/update the required packages
 pacman -S mingw-w64-x86_64-libmicrohttpd mingw-w64-x86_64-json-c mingw-w64-x86_64-gcc
 ```
 
@@ -116,3 +120,26 @@ To remove compiled files:
 ```bash
 make clean
 ```
+
+## Troubleshooting
+
+### Windows: "clock_gettime64 could not be located in libgnutls-30.dll"
+
+This error occurs when MSYS2 packages are out of sync. To fix:
+
+1. Open MSYS2 MinGW 64-bit terminal
+2. Update all packages:
+   ```bash
+   pacman -Syu
+   ```
+3. If prompted to close the terminal, do so and reopen it, then run again:
+   ```bash
+   pacman -Syu
+   ```
+4. Rebuild the application:
+   ```bash
+   make clean
+   make
+   ```
+
+Alternatively, you can rebuild the application to statically link dependencies or ensure your PATH only includes the MSYS2 MinGW64 binaries.

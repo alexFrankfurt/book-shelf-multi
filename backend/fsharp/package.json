@@ -1,0 +1,10 @@
+{
+  "name": "book-api-fsharp",
+  "version": "1.0.0",
+  "description": "Book API backend in F# with ASP.NET Core",
+  "scripts": {
+    "start": "dotnet run",
+    "build": "dotnet build",
+    "test": "dotnet test"
+  }
+}

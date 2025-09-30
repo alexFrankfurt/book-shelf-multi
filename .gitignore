@@ -394,3 +394,6 @@ Cargo.lock
 
 # End of https://www.t_optal.com/developers/gitignore/api/node,c++,cmake,python,go,rust
 ACTIVITY.md
+
+
+obj

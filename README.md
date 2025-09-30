@@ -15,6 +15,7 @@ The project is structured as a monorepo with the following directories:
   - `c`: A backend built with plain C.
   - `java`: A backend built with Spring Boot.
   - `csharp`: A backend built with ASP.NET Core.
+  - `fsharp`: A backend built with F# and ASP.NET Core.
 
 ## Installation
 

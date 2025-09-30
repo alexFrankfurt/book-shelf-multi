@@ -65,6 +65,23 @@ The API will be available at http://localhost:3000
 
 See `backend/c/README.md` for detailed installation instructions for your platform.
 
+## F# Implementation
+
+To run the F# implementation, use the following command from the root of the project:
+
+```bash
+npm run start:fsharp
+```
+
+The API will be available at http://localhost:3000
+
+**Prerequisites:** The F# implementation requires the following:
+- .NET 8 SDK installed
+- For MongoDB support: MongoDB.Driver package will be installed via NuGet
+- For OracleDB support: Oracle.ManagedDataAccess.Core package will be installed via NuGet
+
+The F# backend uses ASP.NET Core with controllers and supports the same database options as other implementations (in-memory, MongoDB, OracleDB).
+
 ## API Data Model
 
 All implementations use the same data model:
