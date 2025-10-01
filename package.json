@@ -12,6 +12,7 @@
     "start:express": "npm start --workspace=backend/express",
     "start:fastapi": "pip install -r backend/fastapi/requirements.txt && uvicorn backend.fastapi.main:app --reload",
     "start:nodejs": "node backend/nodejs/index.js",
+    "start:php": "cd backend/php && php -S 0.0.0.0:3000 index.php",
     "start:c": "cd backend/c && book-api.exe",
     "start:cpp": "cd backend/cpp/build && ./cpp_backend",
     "start:go": "cd backend/go && go run main.go",
