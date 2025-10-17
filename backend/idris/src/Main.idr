@@ -1,19 +1,20 @@
 module Main
 
 import Data.String
-import Data.Vect
 import Data.Maybe
-import System.Info
+import Data.IORef as IORef
+import Data.ByteString
+import Data.List as List
 import Network.HTTP.Server
 import Network.HTTP.Application
+import Data.List1 as List1
 import Network.HTTP.Headers
+import Network.HTTP.Methods
 import Network.HTTP.Request
 import Network.HTTP.Response
 import Network.Socket
-import Data.IORef
-import Data.ByteString
-import Data.Bits
 import JSON
+import Network.HTTP.Connection
 
 -- Book record
 record Book where
@@ -24,141 +25,147 @@ record Book where
   description : String
   coverImageUrl : String
 
+record BookPayload where
+  constructor MkBookPayload
+  title : String
+  author : String
+  description : String
+  coverImageUrl : String
+
+implementation FromJSON BookPayload where
+  fromJSON = withObject "BookPayload" $ \obj => do
+    title <- field obj "title"
+    author <- field obj "author"
+    description <- field obj "description"
+    coverImageUrl <- field obj "coverImageUrl"
+    pure (MkBookPayload title author description coverImageUrl)
+
 -- JSON instances for Book
 implementation ToJSON Book where
   toJSON (MkBook id title author description coverImageUrl) =
-    JObject [ ("id", JNumber (cast id))
-            , ("title", JString title)
-            , ("author", JString author)
-            , ("description", JString description)
-            , ("coverImageUrl", JString coverImageUrl)
-            ]
+    object [ ("id", toJSON id)
+           , ("title", toJSON title)
+           , ("author", toJSON author)
+           , ("description", toJSON description)
+           , ("coverImageUrl", toJSON coverImageUrl)
+           ]
 
 implementation FromJSON Book where
-  fromJSON (JObject obj) = do
-    id <- lookup "id" obj >>= fromJSON
-    title <- lookup "title" obj >>= fromJSON
-    author <- lookup "author" obj >>= fromJSON
-    description <- lookup "description" obj >>= fromJSON
-    coverImageUrl <- lookup "coverImageUrl" obj >>= fromJSON
+  fromJSON = withObject "Book" $ \obj => do
+    id <- field obj "id"
+    title <- field obj "title"
+    author <- field obj "author"
+    description <- field obj "description"
+    coverImageUrl <- field obj "coverImageUrl"
     pure (MkBook id title author description coverImageUrl)
-  fromJSON _ = Nothing
 
--- In-memory book store
-books : IORef (Vect Book)
-books = unsafePerformIO (newIORef [MkBook 1 "The Lord of the Rings" "J.R.R. Tolkien" "A classic fantasy novel." "http://example.com/cover.jpg"])
+initialBooks : List Book
+initialBooks =
+  [ MkBook 1 "The Lord of the Rings" "J.R.R. Tolkien" "A classic fantasy novel." "http://example.com/cover.jpg"
+  ]
+
+serverPort : Port
+serverPort = fromInteger 8008
 
 -- Helper to create a JSON response
 jsonResponse : ToJSON a => Status -> a -> Response ByteString
-jsonResponse status body = MkResponse status [("Content-Type", "application/json")] (pack (toString (toJSON body)))
+jsonResponse status body =
+  let
+    payload : String = encode body
+    headers = addHeader (MkHeader "Content-Type" ["application/json"]) empty
+  in MkResponse status headers (cast {to = ByteString} payload)
 
 -- Helper to create a text response
 textResponse : Status -> String -> Response ByteString
-textResponse status body = MkResponse status [("Content-Type", "text/plain")] (pack body)
+textResponse status body =
+  let headers = addHeader (MkHeader "Content-Type" ["text/plain"]) empty
+  in MkResponse status headers (cast {to = ByteString} body)
 
--- Get all books
-getBooks : Application
-getBooks req responder = do
-  allBooks <- readIORef books
+getBooks : IORef.IORef (List Book) -> Application
+getBooks booksRef req responder = do
+  allBooks <- IORef.readIORef booksRef
   responder $ jsonResponse statusOK allBooks
 
 -- Get book by id
-getBook : Int -> Application
-getBook id req responder = do
-  allBooks <- readIORef books
-  case find (\b => b.id == id) allBooks of
+getBook : IORef.IORef (List Book) -> Int -> Application
+getBook booksRef id req responder = do
+  allBooks <- IORef.readIORef booksRef
+  case List.find (\b => b.id == id) allBooks of
     Just book => responder $ jsonResponse statusOK book
     Nothing => responder $ textResponse statusNotFound "Book not found"
 
 -- Create a new book
-createBook : Application
-createBook req responder = do
-  Right body <- readRequestBody req
-    | Left err => responder $ textResponse statusBadRequest "Invalid request body"
-  case fromString (toString body) of
-    Just (JObject obj) => do
-      let maybeBook = do
-            title <- lookup "title" obj >>= fromJSON
-            author <- lookup "author" obj >>= fromJSON
-            description <- lookup "description" obj >>= fromJSON
-            coverImageUrl <- lookup "coverImageUrl" obj >>= fromJSON
-            pure (MkBook 0 title author description coverImageUrl)
-      case maybeBook of
-        Just newBook => do
-          allBooks <- readIORef books
-          let newId = case maximum (map (\b => b.id) allBooks) of
-                        Nothing => 1
-                        Just maxId => maxId + 1
-          let finalBook = MkBook newId newBook.title newBook.author newBook.description newBook.coverImageUrl
-          writeIORef books (finalBook :: allBooks)
+createBook : IORef.IORef (List Book) -> Application
+createBook booksRef req responder = do
+  bodyResult <- readRequestBody req
+  case bodyResult of
+    Left _ => responder $ textResponse statusBadRequest "Invalid request body"
+    Right body =>
+      case decodeEither {a = BookPayload} (Data.ByteString.toString body) of
+        Left _ => responder $ textResponse statusBadRequest "Invalid book data"
+        Right (MkBookPayload title author description coverImageUrl) => do
+          allBooks <- IORef.readIORef booksRef
+          let nextId = foldl (\acc, b => max acc b.id) 0 allBooks + 1
+          let finalBook = MkBook nextId title author description coverImageUrl
+          IORef.writeIORef booksRef (finalBook :: allBooks)
           responder $ jsonResponse statusCreated finalBook
-        Nothing => responder $ textResponse statusBadRequest "Invalid book data"
-    _ => responder $ textResponse statusBadRequest "Invalid JSON"
 
 -- Update a book
-updateBook : Int -> Application
-updateBook id req responder = do
-  Right body <- readRequestBody req
-    | Left err => responder $ textResponse statusBadRequest "Invalid request body"
-  case fromString (toString body) of
-    Just (JObject obj) => do
-      let maybeBook = do
-            title <- lookup "title" obj >>= fromJSON
-            author <- lookup "author" obj >>= fromJSON
-            description <- lookup "description" obj >>= fromJSON
-            coverImageUrl <- lookup "coverImageUrl" obj >>= fromJSON
-            pure (MkBook id title author description coverImageUrl)
-      case maybeBook of
-        Just updatedBook => do
-          allBooks <- readIORef books
+updateBook : IORef.IORef (List Book) -> Int -> Application
+updateBook booksRef id req responder = do
+  bodyResult <- readRequestBody req
+  case bodyResult of
+    Left _ => responder $ textResponse statusBadRequest "Invalid request body"
+    Right body =>
+      case decodeEither {a = BookPayload} (Data.ByteString.toString body) of
+        Left _ => responder $ textResponse statusBadRequest "Invalid book data"
+        Right (MkBookPayload title author description coverImageUrl) => do
+          allBooks <- IORef.readIORef booksRef
           if any (\b => b.id == id) allBooks
             then do
+              let updatedBook = MkBook id title author description coverImageUrl
               let newBooks = map (\b => if b.id == id then updatedBook else b) allBooks
-              writeIORef books newBooks
+              IORef.writeIORef booksRef newBooks
               responder $ jsonResponse statusOK updatedBook
             else responder $ textResponse statusNotFound "Book not found"
-        Nothing => responder $ textResponse statusBadRequest "Invalid book data"
-    _ => responder $ textResponse statusBadRequest "Invalid JSON"
 
 -- Delete a book
-deleteBook : Int -> Application
-deleteBook id req responder = do
-  allBooks <- readIORef books
+deleteBook : IORef.IORef (List Book) -> Int -> Application
+deleteBook booksRef id req responder = do
+  allBooks <- IORef.readIORef booksRef
   if any (\b => b.id == id) allBooks
     then do
       let newBooks = filter (\b => b.id /= id) allBooks
-      writeIORef books newBooks
+      IORef.writeIORef booksRef newBooks
       responder $ textResponse statusOK "Book deleted"
     else responder $ textResponse statusNotFound "Book not found"
 
 -- Router
-app : Application
-app req responder =
-  case req.resource of
-    "/books" =>
-      case req.method of
-        GET => getBooks req responder
-        POST => createBook req responder
-        _ => responder $ textResponse statusMethodNotAllowed "Method not allowed"
-    _ =>
-      case (req.method, split (=='/') req.resource) of
-        (GET, ["", "books", idStr]) =>
+app : IORef.IORef (List Book) -> Application
+app booksRef req responder =
+  let
+    method = req.method
+    segments = List1.forget (split (=='/') req.resource)
+  in case (req.resource, segments, method) of
+        ("/books", _, GET) => getBooks booksRef req responder
+        ("/books", _, POST) => createBook booksRef req responder
+        ("/books", _, _) => responder $ textResponse statusMethodNotAllowed "Method not allowed"
+        (_, ["", "books", idStr], meth) =>
           case parseInteger idStr of
-            Just id => getBook id req responder
             Nothing => responder $ textResponse statusBadRequest "Invalid book ID"
-        (PUT, ["", "books", idStr]) =>
-          case parseInteger idStr of
-            Just id => updateBook id req responder
-            Nothing => responder $ textResponse statusBadRequest "Invalid book ID"
-        (DELETE, ["", "books", idStr]) =>
-          case parseInteger idStr of
-            Just id => deleteBook id req responder
-            Nothing => responder $ textResponse statusBadRequest "Invalid book ID"
+            Just rawId =>
+              let bookId : Int = fromInteger rawId
+               in case meth of
+                    GET => getBook booksRef bookId req responder
+                    PUT => updateBook booksRef bookId req responder
+                    DELETE => deleteBook booksRef bookId req responder
+                    _ => responder $ textResponse statusMethodNotAllowed "Method not allowed"
         _ => responder $ textResponse statusNotFound "Not Found"
 
 -- Main entry point
 main : IO ()
 main = do
   putStrLn "Starting server on port 8008"
-  res <- listenAndServe (MkPort 8008 TCP) app
+  booksRef <- IORef.newIORef initialBooks
+  res <- listenAndServe serverPort (app booksRef)
   print res
