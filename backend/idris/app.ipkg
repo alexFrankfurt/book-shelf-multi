@@ -1,0 +1,11 @@
+package app
+
+modules = Main
+
+sourcedir = "src"
+
+main = Main
+
+executable = "app"
+
+depends = idris2-http-server, json

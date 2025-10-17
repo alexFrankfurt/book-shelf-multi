@@ -1,0 +1,43 @@
+
+
+
+[custom.all.app]
+type = "local"
+path = "."
+ipkg = "app.ipkg"
+depends = ["idris2-http-server", "idris2-bytestring", "idris2-array", "idris2-algebra", "json"]
+
+
+
+
+
+
+[custom.all.idris2-http-server]
+type = "git"
+url = "https://github.com/ska80/idris2-server.git"
+commit = "df8de05adc0f7e822db55d5133bf1be5541f301b"
+ipkg = "idris2-http-server.ipkg"
+
+[custom.all.idris2-bytestring]
+type = "git"
+url = "https://github.com/stefan-hoeck/idris2-bytestring.git"
+commit = "082c5114b4016425c9957e955e22fcb0b194ada4"
+ipkg = "bytestring.ipkg"
+
+[custom.all.idris2-array]
+type = "git"
+url = "https://github.com/stefan-hoeck/idris2-array.git"
+commit = "b5b88a3fe1680ba377543ab2ff9f265f8a79e188"
+ipkg = "array.ipkg"
+
+[custom.all.idris2-algebra]
+type = "git"
+url = "https://github.com/stefan-hoeck/idris2-algebra.git"
+commit = "829f44b7fd961e3f0a7ad9174b395f97ebc33336"
+ipkg = "algebra.ipkg"
+
+[custom.all.json]
+type = "git"
+url = "https://github.com/stefan-hoeck/idris2-json.git"
+commit = "f2e84748d5cec7f3b4dd12a54151480b1d0b15a1"
+ipkg = "json.ipkg"
