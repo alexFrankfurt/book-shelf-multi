@@ -65,7 +65,8 @@ initialBooks =
   ]
 
 serverPort : Port
-serverPort = fromInteger 8008
+serverPort = fromInteger 3000
+
 
 -- Helper to create a JSON response
 jsonResponse : ToJSON a => Status -> a -> Response ByteString
@@ -165,7 +166,7 @@ app booksRef req responder =
 -- Main entry point
 main : IO ()
 main = do
-  putStrLn "Starting server on port 8008"
+  putStrLn "Starting server on port 3000"
   booksRef <- IORef.newIORef initialBooks
   res <- listenAndServe serverPort (app booksRef)
   print res
