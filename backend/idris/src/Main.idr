@@ -84,12 +84,14 @@ textResponse status body =
 
 getBooks : IORef.IORef (List Book) -> Application
 getBooks booksRef req responder = do
+  putStrLn "Entered getBooks"
   allBooks <- IORef.readIORef booksRef
   responder $ jsonResponse statusOK allBooks
 
 -- Get book by id
 getBook : IORef.IORef (List Book) -> Int -> Application
 getBook booksRef id req responder = do
+  putStrLn $ "Entered getBook with id=" ++ show id
   allBooks <- IORef.readIORef booksRef
   case List.find (\b => b.id == id) allBooks of
     Just book => responder $ jsonResponse statusOK book
@@ -98,13 +100,16 @@ getBook booksRef id req responder = do
 -- Create a new book
 createBook : IORef.IORef (List Book) -> Application
 createBook booksRef req responder = do
+  putStrLn "Entered createBook"
   bodyResult <- readRequestBody req
   case bodyResult of
     Left _ => responder $ textResponse statusBadRequest "Invalid request body"
-    Right body =>
+    Right body => do
+      putStrLn "Received body for createBook"
       case decodeEither {a = BookPayload} (Data.ByteString.toString body) of
         Left _ => responder $ textResponse statusBadRequest "Invalid book data"
         Right (MkBookPayload title author description coverImageUrl) => do
+          putStrLn "Decoded BookPayload in createBook"
           allBooks <- IORef.readIORef booksRef
           let nextId = foldl (\acc, b => max acc b.id) 0 allBooks + 1
           let finalBook = MkBook nextId title author description coverImageUrl
@@ -114,16 +119,20 @@ createBook booksRef req responder = do
 -- Update a book
 updateBook : IORef.IORef (List Book) -> Int -> Application
 updateBook booksRef id req responder = do
+  putStrLn $ "Entered updateBook with id=" ++ show id
   bodyResult <- readRequestBody req
   case bodyResult of
     Left _ => responder $ textResponse statusBadRequest "Invalid request body"
-    Right body =>
+    Right body => do
+      putStrLn "Received body for updateBook"
       case decodeEither {a = BookPayload} (Data.ByteString.toString body) of
         Left _ => responder $ textResponse statusBadRequest "Invalid book data"
         Right (MkBookPayload title author description coverImageUrl) => do
+          putStrLn "Decoded BookPayload in updateBook"
           allBooks <- IORef.readIORef booksRef
           if any (\b => b.id == id) allBooks
             then do
+              putStrLn "Found book to update"
               let updatedBook = MkBook id title author description coverImageUrl
               let newBooks = map (\b => if b.id == id then updatedBook else b) allBooks
               IORef.writeIORef booksRef newBooks
@@ -133,13 +142,23 @@ updateBook booksRef id req responder = do
 -- Delete a book
 deleteBook : IORef.IORef (List Book) -> Int -> Application
 deleteBook booksRef id req responder = do
+  putStrLn $ "Entered deleteBook with id=" ++ show id
   allBooks <- IORef.readIORef booksRef
   if any (\b => b.id == id) allBooks
     then do
+      putStrLn "Found book to delete"
       let newBooks = filter (\b => b.id /= id) allBooks
       IORef.writeIORef booksRef newBooks
       responder $ textResponse statusOK "Book deleted"
     else responder $ textResponse statusNotFound "Book not found"
+
+-- Simple addition endpoint response
+addNumbers : Application
+addNumbers req responder = do
+  putStrLn "Entered addNumbers endpoint"
+  let result : Int = 2 + 3
+  putStrLn $ "Calculated result: " ++ show result
+  responder $ textResponse statusOK (show result)
 
 -- Router
 app : IORef.IORef (List Book) -> Application
@@ -148,20 +167,40 @@ app booksRef req responder =
     method = req.method
     segments = List1.forget (split (=='/') req.resource)
   in case (req.resource, segments, method) of
-        ("/books", _, GET) => getBooks booksRef req responder
-        ("/books", _, POST) => createBook booksRef req responder
-        ("/books", _, _) => responder $ textResponse statusMethodNotAllowed "Method not allowed"
-        (_, ["", "books", idStr], meth) =>
+        ("/books", _, GET) => do
+          putStrLn "Routing GET /books"
+          getBooks booksRef req responder
+        ("/books", _, POST) => do
+          putStrLn "Routing POST /books"
+          createBook booksRef req responder
+        ("/books", _, _) => do
+          putStrLn "Routing unsupported method for /books"
+          responder $ textResponse statusMethodNotAllowed "Method not allowed"
+        ("/add", _, GET) => do
+          putStrLn "Routing GET /add"
+          addNumbers req responder
+        (_, ["", "books", idStr], meth) => do
+          putStrLn $ "Routing with ID segment: " ++ idStr
           case parseInteger idStr of
             Nothing => responder $ textResponse statusBadRequest "Invalid book ID"
             Just rawId =>
               let bookId : Int = fromInteger rawId
                in case meth of
-                    GET => getBook booksRef bookId req responder
-                    PUT => updateBook booksRef bookId req responder
-                    DELETE => deleteBook booksRef bookId req responder
-                    _ => responder $ textResponse statusMethodNotAllowed "Method not allowed"
-        _ => responder $ textResponse statusNotFound "Not Found"
+                    GET => do
+                      putStrLn "Routing GET /books/{id}"
+                      getBook booksRef bookId req responder
+                    PUT => do
+                      putStrLn "Routing PUT /books/{id}"
+                      updateBook booksRef bookId req responder
+                    DELETE => do
+                      putStrLn "Routing DELETE /books/{id}"
+                      deleteBook booksRef bookId req responder
+                    _ => do
+                      putStrLn "Routing unsupported method for /books/{id}"
+                      responder $ textResponse statusMethodNotAllowed "Method not allowed"
+        _ => do
+          putStrLn "Routing fell through to 404"
+          responder $ textResponse statusNotFound "Not Found"
 
 -- Main entry point
 main : IO ()

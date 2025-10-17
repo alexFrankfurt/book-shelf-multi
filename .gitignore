@@ -101,6 +101,11 @@ coverage
 # nyc test coverage
 .nyc_output
 
+
+# Elixir
+deps/
+_build/
+
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
@@ -228,7 +233,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+
 lib64/
 parts/
 sdist/
