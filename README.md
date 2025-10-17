@@ -11,11 +11,13 @@ The project is structured as a monorepo with the following directories:
   - `c`: A backend built with plain C using **libmicrohttpd** for HTTP requests.
   - `cpp`: A backend built with C++ using **Crow** for HTTP requests.
   - `csharp`: A backend built with ASP.NET Core using **ASP.NET Core** for HTTP requests.
+  - `elixir`: A backend built with Elixir using **Plug and Cowboy** for HTTP requests.
   - `express`: A backend built with Express.js using **Express** for HTTP requests.
   - `fastapi`: A backend built with FastAPI (Python) using **FastAPI** for HTTP requests.
   - `fsharp`: A backend built with F# and ASP.NET Core using **ASP.NET Core** for HTTP requests.
   - `go`: A backend built with Go using **gorilla/mux** for HTTP requests.
   - `haskell`: A backend built with Haskell using **Scotty** for HTTP requests.
+  - `idris`: A backend built with Idris 2 using **custom HTTP server** for HTTP requests.
   - `java`: A backend built with Spring Boot using **Spring Web MVC** for HTTP requests.
   - `nestjs`: A backend built with NestJS using **NestJS** (Express-based) for HTTP requests.
   - `nodejs`: A backend built with plain Node.js using **Node.js HTTP** module for HTTP requests.
@@ -161,7 +163,30 @@ You can run any of the backend implementations using the following commands:
   npm run start:ruby
   ```
 
-All backends run on `http://localhost:3000` by default.
+- **Elixir:**
+
+  ```bash
+  cd backend/elixir
+  mix run --no-halt
+  ```
+
+- **Idris:**
+
+  ```bash
+  cd backend/idris
+  idris2 --codegen chez --build app.ipkg
+  ./build/exec/app
+  ```
+
+All backends run on `http://localhost:3000` by default, except:
+
+- **NestJS:** `http://localhost:3001`
+- **C++:** `http://localhost:8080`
+- **Go:** `http://localhost:8081`
+- **Rust:** `http://localhost:8080`
+- **Java:** `http://localhost:8080`
+- **C#:** `http://localhost:5000` (or `5001` for HTTPS)
+- **F#:** `http://localhost:5000` (or `5001` for HTTPS)
 
 ## Database Configuration
 
@@ -202,3 +227,7 @@ The project has two sets of end-to-end tests: Cypress and Playwright.
   ```
 
 Both test runners are configured to run against the frontend application, which in turn communicates with the backend running on `http://localhost:3000`.
+
+
+
+
